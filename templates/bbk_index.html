@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="mb-4">Список ББК</h2>
+
+<form method="GET" action="/" class="mb-3">
+    <div class="input-group">
+        <input type="text" class="form-control" name="q" placeholder="Поиск по ключевым словам" value="{{ query }}">
+        <button type="submit" class="btn btn-primary">Искать</button>
+    </div>
+</form>
+
+<ul class="list-group shadow-sm">
+    {% for bbk in bbk_list %}
+        <li class="list-group-item">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <strong>{{ bbk.bbk_code }}</strong> — {{ bbk.category }}<br>
+                    <small class="text-muted">Ключевые слова: {{ bbk.keywords }}</small>
+                </div>
+                {% if current_user.is_authenticated %}
+                    <div class="btn-group">
+                        <a href="{{ url_for('edit_bbk', id=bbk.id) }}" class="btn btn-sm btn-outline-warning">Редактировать</a>
+                        <form method="POST" action="{{ url_for('delete_bbk', id=bbk.id) }}" onsubmit="return confirm('Удалить запись?');">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Удалить</button>
+                        </form>
+                    </div>
+                {% endif %}
+            </div>
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}
